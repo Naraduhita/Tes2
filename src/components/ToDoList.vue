@@ -5,11 +5,12 @@
       <div class="container" style="max-width: 45rem;">
         <h1>Daftar Mahasiswa</h1>
         <!-- <div class="form-group"> -->
+          <!--menambahkan nama-->
         <form @submit.prevent="addTask">
           <div for="newTaskDescription" style="padding-bottom: 10px;">Add Nama :</div>
           <input type="text" class="form-control" ref="desc" v-model="this.description" placeholder="add name" required style="margin-bottom: 15px" />
           <div for="newTaskDescription" style="padding-bottom: 10px;">Add NRP :</div>
-          <input type="text" class="form-control" ref="desc" v-model="this.description" placeholder="add NRP" required style="margin-bottom: 15px" />
+          <input type="text" class="form-control" ref="desc" v-model="this.nrp" placeholder="add NRP" required style="margin-bottom: 15px" />
           <div class="form-create">
             <button class="btn" type="submit" value="Submit" style="background-color:	#BC8F8F;">Submit</button>
           </div>
@@ -17,6 +18,27 @@
       </div>
     </div>
   </div>
+  <div class="taskslist">
+              <table class="table">
+            <thead class="table table-dark">
+                <tr>
+                    <th class="descrption">Nama</th>
+                    <th class="nrp">NRP</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(task,i) in tasks" :key="i">
+                    <td class="description" v-bind:class="{completed: task.completed}" @click="toggleTask(task.id, task.completed)">
+                    {{task.description}}</td>
+                    <td class="tags" >
+                        <p v-for="data in task.tags" v-bind:key="data in task.tags">
+                            {{data}}
+                        </p>    
+                    </td>
+                </tr>
+            </tbody>
+        </table>    
+    </div>
   <br>
 </div>
 </template>
@@ -40,8 +62,8 @@ export default {
     return {
       creationTime: null,
       description: '',
+      nrp:'',
       tasks: [],
-      checkedTags: [],
       newTags: [],
     };
   },
@@ -50,6 +72,7 @@ export default {
       const tasksCollection = await addDoc(collection(db, 'task'), {
         id: '',
         description: this.description,
+        nrp:this.nrp,
         completed: false,
         // cat: this.$refs.cat.value,
         creationTime: Date.now(),
@@ -59,6 +82,7 @@ export default {
       await updateDoc(docUp, { id: tasksCollection.id });
       console.log(tasksCollection);
       this.description = '';
+      this.nrp = '';
       this.load();
     },
     async load() {

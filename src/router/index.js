@@ -11,7 +11,7 @@ const router = createRouter({
     component: TodoApp
   },
   {
-    path: '/Wishlist',
+    path: '/Mahasiswa',
     name: 'Cat1',
     component: () => import('../views/Cat1.vue')
   },
